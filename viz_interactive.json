@@ -3,7 +3,7 @@
   "description": "Trend of total reader engagement (in millions) by genre over time.",
   "height": 420,
   "width": 600, 
-  "data": {"url": "vl/data/final_books_data_2011_2024.csv"},
+  "data": {"url": "final_books_data_2011_2024.csv"},
   "params": [
     {
       "name": "catSelect",
