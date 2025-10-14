@@ -112,19 +112,19 @@
   <!-- Embed Vega-Lite Visualizations -->
   <script>
     // Map overview
-    vegaEmbed("#vis-map", "vl/map_spec.json", { actions: false }).catch(console.error);
+    vegaEmbed("#vis-map", "map_spec.json", { actions: false }).catch(console.error);
 
     // Main reading vs output scatter
-    vegaEmbed("#vis-01", "vl/vis01_frontier.json", { actions: false }).catch(console.error);
+    vegaEmbed("#vis-01", "vis01_frontier.json", { actions: false }).catch(console.error);
 
     // Interactive time trend (moved just below frontier)
-    vegaEmbed("#vis-03", "vl/viz_interactive.json", { actions: false }).catch(console.error);
+    vegaEmbed("#vis-03", "viz_interactive.json", { actions: false }).catch(console.error);
 
     // Quadrant heatmap
-    vegaEmbed("#vis-02", "vl/vis02_quadrant_heatmap.json", { actions: false }).catch(console.error);
+    vegaEmbed("#vis-02", "vis02_quadrant_heatmap.json", { actions: false }).catch(console.error);
 
     // Scatter with year slider (genre/popularity)
-    vegaEmbed("#vis-04", "vl/viz_scatter.json", { actions: false }).catch(console.error);
+    vegaEmbed("#vis-04", "viz_scatter.json", { actions: false }).catch(console.error);
   </script>
 </body>
 </html>
