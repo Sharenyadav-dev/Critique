@@ -3,7 +3,7 @@
   "description": "Relationship between average rating and popularity (in millions) by genre.",
   "width": 900,
   "height": 420,
-  "data": {"url": "vl/data/final_books_data_2011_2024.csv"},
+  "data": {"url": "final_books_data_2011_2024.csv"},
   "params": [
     {
       "name": "yearSelect",
