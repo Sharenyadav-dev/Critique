@@ -1,0 +1,86 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Relationship between average rating and popularity (in millions) by genre.",
+  "width": 900,
+  "height": 420,
+  "data": {"url": "vl/data/final_books_data_2011_2024.csv"},
+  "params": [
+    {
+      "name": "yearSelect",
+      "value": 2024,
+      "bind": {
+        "input": "range",
+        "name": "Publication Year:",
+        "min": 2011,
+        "max": 2024,
+        "step": 1
+      }
+    }
+  ],
+  "transform": [
+    {"filter": "isValid(datum.rating) && isValid(datum.num_ratings)"},
+    {"filter": "datum.publication_year == yearSelect"},
+    {"filter": "datum.rating >= 3.3 && datum.rating <= 4.8"},
+    {"filter": "datum.num_ratings > 0"},
+    {"calculate": "datum.num_ratings / 1000000", "as": "num_ratings_millions"}
+  ],
+  "mark": {
+    "type": "circle",
+    "filled": true,
+    "opacity": 0.75,
+    "size": 90,
+    "stroke": "#333",
+    "strokeWidth": 0.3
+  },
+  "encoding": {
+    "x": {
+      "field": "rating",
+      "type": "quantitative",
+      "title": "Average Rating (1–5)",
+      "scale": {"domain": [3.3, 4.8]},
+      "axis": {
+        "grid": true,
+        "labelFontSize": 13,
+        "titleFontSize": 13,
+        "format": ".1f"
+      }
+    },
+    "y": {
+      "field": "num_ratings_millions",
+      "type": "quantitative",
+      "title": "Number of Ratings (Millions)",
+      "axis": {
+        "format": ".2f",
+        "grid": true,
+        "labelFontSize": 13,
+        "titleFontSize": 13
+      },
+      "scale": {"zero": true, "nice": true}
+    },
+    "color": {
+      "field": "category",
+      "type": "nominal",
+      "title": "Genre",
+      "legend": {"columns": 2, "orient": "top"}
+    },
+    "tooltip": [
+      {"field": "title", "title": "Book Title"},
+      {"field": "author", "title": "Author"},
+      {"field": "rating", "title": "Average Rating", "format": ".2f"},
+      {"field": "num_ratings_millions", "title": "Total Ratings (M)", "format": ".2f"},
+      {"field": "category", "title": "Genre"}
+    ]
+  },
+  "title": {
+    "text": "Rating vs Popularity (By Year)",
+    "subtitle": "Use slider to explore year · Popularity shown in millions",
+    "anchor": "start",
+    "fontSize": 18
+  },
+  "config": {
+    "background": "#fff",
+    "axis": {"grid": true, "gridColor": "#eee"},
+    "view": {"stroke": null},
+    "style": {"guide-label": {"font": "Inter, sans-serif"}}
+  }
+}

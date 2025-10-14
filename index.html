@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reading Frontier — Global Reading & Publishing Patterns (FIT3179)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+
+<body>
+  <header class="page-header">
+    <h1>Reading Frontier</h1>
+    <p class="lede">
+      Exploring how nations balance <strong>publishing output</strong> and <strong>reading engagement</strong>.<br>
+      <em>Each visualization draws on national-level data: titles published, books read per person, and annual reading time.</em>
+    </p>
+  </header>
+
+  <!-- SECTION 1: Global Map Overview -->
+  <section class="grid">
+    <section class="viz card wide">
+      <div id="vis-map"></div>
+      <figcaption class="note">
+        <strong>Global Overview:</strong>
+        The world map highlights differences in national reading engagement, combining both time spent and books read per capita.
+        Use this view to spot clusters of strong or emerging reading cultures.
+      </figcaption>
+    </section>
+  </section>
+
+  <!-- SECTION 2: Publishing & Reading Frontier -->
+  <main class="grid">
+    <section class="viz card">
+      <div id="vis-01"></div>
+      <figcaption class="note">
+        <strong>Interpretation:</strong>
+        Countries higher on the chart indicate greater reading engagement per person; those further right have larger publishing outputs.
+        The top-right quadrant represents nations strong in both literary production and reader participation.
+      </figcaption>
+    </section>
+
+    <aside class="insights card">
+      <h3>Insights</h3>
+      <ul>
+        <li><strong>Australia:</strong> 10 books/person, 217 hrs/year (~21.7 hrs/book).</li>
+        <li><strong>Peers:</strong> US, UK, India & NZ show higher reading intensity per output.</li>
+        <li><strong>Reading productivity frontier:</strong> Nations in the upper-right maximize both production & participation.</li>
+        <li><strong>Time intensity:</strong> Larger bubbles = more hours spent reading annually.</li>
+      </ul>
+    </aside>
+  </main>
+
+  <!-- SECTION 3: Interactive Trend directly below Frontier -->
+  <section class="grid">
+    <section class="viz card wide">
+      <div id="vis-03"></div>
+      <figcaption class="note">
+        <strong>Interactive Exploration:</strong>
+        Adjust parameters to explore changes in reading time, output, or engagement over the years.
+        Use the filters to view trends for specific regions or literacy categories.
+      </figcaption>
+    </section>
+  </section>
+
+  <!-- SECTION 4: Quadrant Summary -->
+  <section class="grid">
+    <section class="viz card">
+      <div id="vis-02"></div>
+      <figcaption class="note">
+        <strong>Quadrant Summary:</strong>
+        Countries grouped by whether they are above or below the global medians for publishing and reading.
+        Each cell’s color and label show how many countries fall into that category.
+      </figcaption>
+    </section>
+
+    <aside class="insights card">
+      <h3>Insights</h3>
+      <ul>
+        <li><strong>High Output · High Reading:</strong> US & UK dominate this space — strong publishing sectors + high readership.</li>
+        <li><strong>High Output · Low Reading:</strong> Economically large but less reader-engaged nations.</li>
+        <li><strong>Low Output · High Reading:</strong> Smaller markets with vibrant reading cultures (Nordic, Eastern Europe).</li>
+        <li><strong>Australia:</strong> Positioned mid-range — solid reading levels but moderate output relative to peers.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- SECTION 5: Genre & Popularity Dynamics -->
+  <section class="grid">
+    <section class="viz card wide">
+      <div id="vis-04"></div>
+      <figcaption class="note">
+        <strong>Genre & Popularity Dynamics:</strong>
+        Hover or use the slider to examine how reading engagement correlates with book ratings and popularity across different genres.
+      </figcaption>
+    </section>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <p class="sources">
+      Sources: 
+      <code>average-books-read-per-year-by-country-2025.csv</code>;
+      <code>books-published-per-year-by-country-2025.csv</code>;
+      <code>global_reading_time_map.csv</code>.
+    </p>
+    <p class="note">Created by Sharen Yadav — FIT3179 Data Visualization Assignment 2 (Monash University)</p>
+  </footer>
+
+  <!-- Embed Vega-Lite Visualizations -->
+  <script>
+    // Map overview
+    vegaEmbed("#vis-map", "vl/map_spec.json", { actions: false }).catch(console.error);
+
+    // Main reading vs output scatter
+    vegaEmbed("#vis-01", "vl/vis01_frontier.json", { actions: false }).catch(console.error);
+
+    // Interactive time trend (moved just below frontier)
+    vegaEmbed("#vis-03", "vl/viz_interactive.json", { actions: false }).catch(console.error);
+
+    // Quadrant heatmap
+    vegaEmbed("#vis-02", "vl/vis02_quadrant_heatmap.json", { actions: false }).catch(console.error);
+
+    // Scatter with year slider (genre/popularity)
+    vegaEmbed("#vis-04", "vl/viz_scatter.json", { actions: false }).catch(console.error);
+  </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Reading Frontier: Where Australia Sits",
+    "subtitle": "Each bubble = country • x = Titles published (log) • y = Books read/person • size = Hours reading/person",
+    "anchor": "start",
+    "color": "#1e293b",
+    "fontSize": 20,
+    "subtitleFontSize": 12
+  },
+  "width": 600,
+  "height": 400,
+  "padding": {"left": 40, "right": 40, "top": 25, "bottom": 25},
+
+  "data": {"url": "vl/data/average-books-read-per-year-by-country-2025.csv"},
+
+  "transform": [
+    {
+      "lookup": "country",
+      "from": {
+        "data": {"url": "vl/data/books-published-per-year-by-country-2025.csv"},
+        "key": "country",
+        "fields": ["BooksPublishedPerYear","BooksPublishedDataYear"]
+      }
+    },
+    {"calculate": "toNumber(datum.BooksPublishedPerYear)", "as": "titles"},
+    {"calculate": "toNumber(datum.BooksReadAnnually_2024)", "as": "books_read"},
+    {"calculate": "toNumber(datum.HoursSpentReadingPerYear_2024)", "as": "hours"},
+    {"calculate": "datum.hours / datum.books_read", "as": "hours_per_book"},
+    {
+      "calculate": "indexof(['Australia','New Zealand','United Kingdom','United States','India'], datum.country) >= 0 ? (datum.country == 'Australia' ? 'Australia' : 'Peer') : 'Other'",
+      "as": "peer_tag"
+    },
+    {"filter": "isFinite(datum.titles) && datum.titles > 0 && datum.books_read > 0 && datum.hours > 0"}
+  ],
+
+  "layer": [
+    {
+      "mark": {"type": "circle", "filled": true, "opacity": 0.85},
+      "encoding": {
+        "x": {
+          "field": "titles",
+          "type": "quantitative",
+          "title": "Titles published per year (log)",
+          "scale": {"type": "log"},
+          "axis": {"format": "~s", "labelColor": "#334155", "titleColor": "#1e293b"}
+        },
+        "y": {
+          "field": "books_read",
+          "type": "quantitative",
+          "title": "Books read per person (year)",
+          "axis": {"labelColor": "#334155", "titleColor": "#1e293b"}
+        },
+        "size": {
+          "field": "hours",
+          "type": "quantitative",
+          "title": "Hours/year reading",
+          "scale": {"type": "sqrt", "range": [30, 550]},
+          "legend": {"orient": "bottom", "direction": "horizontal", "symbolSize": 200}
+        },
+        "color": {
+          "field": "peer_tag",
+          "type": "nominal",
+          "title": "Country Group",
+          "scale": {
+            "domain": ["Australia", "Peer", "Other"],
+            "range": ["#2563eb", "#f59e0b", "#d1d5db"]
+          },
+          "legend": {"orient": "bottom", "direction": "horizontal", "symbolSize": 200}
+        },
+        "tooltip": [
+          {"field": "country", "title": "Country"},
+          {"field": "titles", "title": "Titles (yr)", "format": "~s"},
+          {"field": "books_read", "title": "Books/person", "format": ".1f"},
+          {"field": "hours", "title": "Hours (yr)", "format": ".0f"},
+          {"field": "hours_per_book", "title": "Hours/book", "format": ".1f"}
+        ]
+      }
+    },
+
+    {
+      "transform": [{"filter": "datum.peer_tag != 'Other'"}],
+      "mark": {
+        "type": "text",
+        "dx": 12,
+        "dy": -10,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#000000"
+      },
+      "encoding": {
+        "x": {"field": "titles", "type": "quantitative", "scale": {"type": "log"}},
+        "y": {"field": "books_read", "type": "quantitative"},
+        "text": {"field": "country"}
+      }
+    },
+
+    {
+      "layer": [
+        {
+          "mark": {
+            "type": "rect",
+            "x": 230,
+            "y": 65,
+            "width": 300,
+            "height": 42,
+            "fill": "#ffffff",
+            "stroke": "#94a3b8",
+            "strokeWidth": 0.6,
+            "cornerRadius": 6
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "x": 105,
+            "y": 65,
+            "align": "left",
+            "fontSize": 13,
+            "fontWeight": "bold",
+            "color": "#1e293b"
+          },
+          "encoding": {
+            "text": {"datum": "Australia — 10 books • 217 hrs (21.7/book)"}
+          }
+        }
+      ]
+    }
+  ],
+
+  "config": {
+    "background": "#ffffff",
+    "view": {"stroke": null},
+    "axis": {"gridColor": "#e2e8f0"},
+    "legend": {
+      "orient": "bottom",
+      "direction": "horizontal",
+      "titleColor": "#1e293b",
+      "labelColor": "#1e293b",
+      "symbolType": "circle",
+      "symbolSize": 200
+    }
+  }
+}

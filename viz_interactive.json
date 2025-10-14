@@ -1,0 +1,71 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Trend of total reader engagement (in millions) by genre over time.",
+  "height": 420,
+  "width": 600, 
+  "data": {"url": "vl/data/final_books_data_2011_2024.csv"},
+  "params": [
+    {
+      "name": "catSelect",
+      "value": "Fiction",
+      "bind": {
+        "input": "select",
+        "name": "Choose Category: ",
+        "options": [
+          "Fiction",
+          "Historical Fiction",
+          "Mystery & Thriller",
+          "Romance",
+          "Science Fiction",
+          "Fantasy",
+          "Horror"
+        ]
+      }
+    }
+  ],
+  "transform": [
+    {"filter": "datum.category == catSelect"},
+    {"calculate": "datum.num_ratings / 1000000", "as": "num_ratings_millions"}
+  ],
+  "mark": {
+    "type": "line",
+    "point": {"filled": true, "size": 60, "color": "#e73108"},
+    "color": "#c5c51f",
+    "strokeWidth": 3
+  },
+  "encoding": {
+    "x": {
+      "field": "publication_year",
+      "type": "ordinal",
+      "title": "Publication Year",
+      "axis": {"labelAngle": 0}
+    },
+    "y": {
+      "aggregate": "sum",
+      "field": "num_ratings_millions",
+      "type": "quantitative",
+      "title": "Total Reader Ratings (Millions)",
+      "axis": {
+        "format": ".2f",
+        "grid": true,
+        "labelFontSize": 13,
+        "titleFontSize": 13
+      }
+    },
+    "tooltip": [
+      {"field": "category", "title": "Category"},
+      {"aggregate": "sum", "field": "num_ratings_millions", "title": "Total Ratings (M)", "format": ".2f"},
+      {"aggregate": "mean", "field": "rating", "title": "Avg Rating", "format": ".2f"}
+    ]
+  },
+  "title": {
+    "text": "Reader Engagement Trend by Genre (2011–2024)",
+    "subtitle": "Interactive genre selector · Values shown in millions",
+    "anchor": "start"
+  },
+  "config": {
+    "background": "#fafafa",
+    "axis": {"labelFontSize": 12, "titleFontSize": 13},
+    "view": {"stroke": null}
+  }
+}

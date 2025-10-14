@@ -1,0 +1,185 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Reading vs Output: Global Quadrants (with Australia Flag Marker)",
+    "subtitle": "Each quadrant shows the median-split categories of global publishing and reading levels.",
+    "anchor": "start",
+    "fontSize": 20,
+    "subtitleFontSize": 12
+  },
+  "width": 420,
+  "height": 350,
+  "padding": {"left": 40, "right": 40, "top": 25, "bottom": 25},
+
+  "data": { "url": "vl/data/average-books-read-per-year-by-country-2025.csv" },
+
+  "transform": [
+    {
+      "lookup": "country",
+      "from": {
+        "data": { "url": "vl/data/books-published-per-year-by-country-2025.csv" },
+        "key": "country",
+        "fields": ["BooksPublishedPerYear", "BooksPublishedDataYear"]
+      }
+    },
+    { "calculate": "toNumber(datum.BooksPublishedPerYear)", "as": "titles" },
+    { "calculate": "toNumber(datum.BooksReadAnnually_2024)", "as": "books_read" },
+    { "filter": "isFinite(datum.titles) && datum.titles > 0 && datum.books_read > 0" },
+
+    {
+      "joinaggregate": [
+        { "op": "median", "field": "titles", "as": "med_titles" },
+        { "op": "median", "field": "books_read", "as": "med_books" }
+      ],
+      "groupby": []
+    },
+    { "calculate": "datum.titles >= datum.med_titles ? 'High Output' : 'Low Output'", "as": "out_bin" },
+    { "calculate": "datum.books_read >= datum.med_books ? 'High Reading' : 'Low Reading'", "as": "read_bin" }
+  ],
+
+  "layer": [
+    {
+      "transform": [
+        { "aggregate": [{ "op": "count", "as": "n" }], "groupby": ["out_bin", "read_bin"] }
+      ],
+      "mark": { "type": "rect", "stroke": "#e2e8f0", "strokeWidth": 0.8 },
+      "encoding": {
+        "x": {
+          "field": "out_bin",
+          "type": "nominal",
+          "title": "Publishing Output",
+          "sort": ["Low Output", "High Output"]
+        },
+        "y": {
+          "field": "read_bin",
+          "type": "nominal",
+          "title": "Reading per Person",
+          "sort": ["Low Reading", "High Reading"]
+        },
+        "color": {
+          "field": "n",
+          "type": "quantitative",
+          "title": "Number of Countries",
+          "scale": { "scheme": "blues", "reverse": true }
+        },
+        "tooltip": [
+          { "field": "out_bin", "title": "Output" },
+          { "field": "read_bin", "title": "Reading" },
+          { "field": "n", "title": "Countries" }
+        ]
+      }
+    },
+
+    {
+      "transform": [
+        { "aggregate": [{ "op": "count", "as": "n" }], "groupby": ["out_bin", "read_bin"] }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 10.5,
+        "color": "#334155",
+        "align": "center",
+        "baseline": "middle",
+        "tooltip": null
+      },
+      "encoding": {
+        "x": { "field": "out_bin", "type": "nominal" },
+        "y": { "field": "read_bin", "type": "nominal" },
+        "text": {
+          "field": "n",
+          "format": ".0f"
+        }
+      }
+    },
+
+    {
+      "transform": [
+        { "aggregate": [{ "op": "count", "as": "n" }], "groupby": ["out_bin", "read_bin"] }
+      ],
+      "mark": {
+        "type": "rect",
+        "color": "#f8fafc",
+        "stroke": "#94a3b8",
+        "strokeWidth": 0.8,
+        "cornerRadius": 4,
+        "width": 180,
+        "height": 38
+      },
+      "encoding": {
+        "x": { "field": "out_bin", "type": "nominal" },
+        "y": { "field": "read_bin", "type": "nominal" }
+      }
+    },
+
+    {
+      "mark": { "type": "text", "fontSize": 11, "color": "#0f172a", "align": "center", "baseline": "middle" },
+      "data": {
+        "values": [
+          {"out_bin":"High Output","read_bin":"High Reading","label":"High Output · High Reading"},
+          {"out_bin":"Low Output","read_bin":"High Reading","label":"Low Output · High Reading"},
+          {"out_bin":"High Output","read_bin":"Low Reading","label":"High Output · Low Reading"},
+          {"out_bin":"Low Output","read_bin":"Low Reading","label":"Low Output · Low Reading"}
+        ]
+      },
+      "encoding": {
+        "x": {"field":"out_bin","type":"nominal"},
+        "y": {"field":"read_bin","type":"nominal"},
+        "text": {"field":"label"}
+      }
+    },
+
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 10,
+        "color": "#475569",
+        "dy": 14
+      },
+      "transform": [
+        { "aggregate": [{ "op": "count", "as": "n" }], "groupby": ["out_bin", "read_bin"] }
+      ],
+      "encoding": {
+        "x": {"field":"out_bin","type":"nominal"},
+        "y": {"field":"read_bin","type":"nominal"},
+        "text": {"field":"n","format":".0f"},
+        "tooltip": null
+      }
+    },
+
+    {
+      "transform": [
+        { "filter": "datum.country == 'Australia'" },
+        { "calculate": "datum.titles >= datum.med_titles ? 'High Output' : 'Low Output'", "as": "out_bin" },
+        { "calculate": "datum.books_read >= datum.med_books ? 'High Reading' : 'Low Reading'", "as": "read_bin" }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -28,
+        "dy": -40,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#0284c7"
+      },
+      "encoding": {
+        "x": { "field": "out_bin", "type": "nominal" },
+        "y": { "field": "read_bin", "type": "nominal" },
+        "text": { "value": "🇦🇺 Australia" }
+      }
+    }
+  ],
+
+  "config": {
+    "background": "#ffffff",
+    "view": { "stroke": null },
+    "axis": {
+      "labelColor": "#1e293b",
+      "titleColor": "#1e293b",
+      "grid": false
+    },
+    "legend": {
+      "labelColor": "#1e293b",
+      "titleColor": "#1e293b"
+    }
+  }
+}
