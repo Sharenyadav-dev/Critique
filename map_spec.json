@@ -23,7 +23,7 @@
         {
           "lookup": "properties.name",
           "from": {
-            "data": {"url": "vl/data/books_published_2025.csv", "format": {"type": "csv"}},
+            "data": {"url": "books_published_2025.csv", "format": {"type": "csv"}},
             "key": "country",
             "fields": ["BooksPublishedPerYear", "BooksPublishedDataYear"]
           }
