@@ -12,13 +12,13 @@
   "height": 400,
   "padding": {"left": 40, "right": 40, "top": 25, "bottom": 25},
 
-  "data": {"url": "vl/data/average-books-read-per-year-by-country-2025.csv"},
+  "data": {"url": "average-books-read-per-year-by-country-2025.csv"},
 
   "transform": [
     {
       "lookup": "country",
       "from": {
-        "data": {"url": "vl/data/books-published-per-year-by-country-2025.csv"},
+        "data": {"url": "books-published-per-year-by-country-2025.csv"},
         "key": "country",
         "fields": ["BooksPublishedPerYear","BooksPublishedDataYear"]
       }
